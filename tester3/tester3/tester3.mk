@@ -14,7 +14,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Zoer
-Date                   :=08/10/24
+Date                   :=09/10/24
 CodeLitePath           :=/home/zoer/.codelite
 MakeDirCommand         :=mkdir -p
 LinkerName             :=/usr/bin/g++-13
@@ -62,7 +62,7 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/main.c++$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/symbol_code.c++$(ObjectSuffix) $(IntermediateDirectory)/main.c++$(ObjectSuffix) 
 
 
 
@@ -93,6 +93,14 @@ PreBuild:
 ##
 ## Objects
 ##
+$(IntermediateDirectory)/symbol_code.c++$(ObjectSuffix): symbol_code.c++ $(IntermediateDirectory)/symbol_code.c++$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/zoer/C++/tester3/tester3/tester3/symbol_code.c++" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/symbol_code.c++$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/symbol_code.c++$(DependSuffix): symbol_code.c++
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/symbol_code.c++$(ObjectSuffix) -MF$(IntermediateDirectory)/symbol_code.c++$(DependSuffix) -MM symbol_code.c++
+
+$(IntermediateDirectory)/symbol_code.c++$(PreprocessSuffix): symbol_code.c++
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/symbol_code.c++$(PreprocessSuffix) symbol_code.c++
+
 $(IntermediateDirectory)/main.c++$(ObjectSuffix): main.c++ $(IntermediateDirectory)/main.c++$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/zoer/C++/tester3/tester3/tester3/main.c++" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/main.c++$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/main.c++$(DependSuffix): main.c++

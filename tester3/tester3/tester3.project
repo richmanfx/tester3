@@ -93,6 +93,7 @@
     </Configuration>
   </Settings>
   <VirtualDirectory Name="src">
+    <File Name="symbol_code.c++"/>
     <File Name="todo.txt"/>
     <File Name="message.txt"/>
     <File Name="main.c++"/>
