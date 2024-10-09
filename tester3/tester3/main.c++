@@ -16,6 +16,7 @@ using namespace std;
 #include <termios.h>
 
 // Прототипы функций
+void mouseMove(string deviceId, string deviceIpAddress, int deviceUdpPort, string offset);
 void controlKeysInterception();
 int getRandomDelay(int minDelaym, int maxDelay);
 std::string getFileMessage(const std::string& fileName);
@@ -31,8 +32,8 @@ int main(void)
     string deviceIpAddress = "192.168.0.222";       // IP-адрес устройства
     int deviceUdpPort = 12345;                      // UDP-порт устройства
     string messageFileName = "message.txt";
-    int minDelay = 200;     // Минимальная задержка нажатия клавиш, миллисекунды
-    int maxDelay = 1000;    // Максимальная задержка нажатия клавиш, миллисекунды
+    int minDelay = 100;     // Минимальная задержка нажатия клавиш, миллисекунды
+    int maxDelay = 700;     // Максимальная задержка нажатия клавиш, миллисекунды
     int releaseDelay = 10;  // Миллисекунды на отпускание клавиш
     
     srand((unsigned)time(NULL));        // Инициализация случайного генератора временем
@@ -237,6 +238,16 @@ int main(void)
         
         // Перехват клавиш управления
 //        controlKeysInterception();
+
+
+        // Пошевелить мышкой через каждые "n" нажатий кнопок
+        int n = 500;
+        if (i % n == 0) {
+            mouseMove(deviceId, deviceIpAddress, deviceUdpPort,  "00007");      // X=+7, Y=+7 пикселей
+            usleep(10000 * getRandomDelay(minDelay, maxDelay));
+            mouseMove(deviceId, deviceIpAddress, deviceUdpPort,  "65529");      // X=-7, Y=-7 пикселей
+            cout << "Mouse! " << i << endl;
+        }
         
         char symbol= txtMessage.at(i);
         // cout << int(x) << endl;       // Вывод в консоль для отладки
@@ -403,4 +414,14 @@ void controlKeysInterception() {
     // Вывести клавишу
     cout << ch;
     
-    }
+}
+
+void mouseMove(string deviceId, string deviceIpAddress, int deviceUdpPort, string offset) {
+    
+    // 348540000012300123
+    // 348540006541365413
+
+    // Переместить курсор мыши на X=offset, Y=offset
+    sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "4", "000", offset, offset);
+            
+}
