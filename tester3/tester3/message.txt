@@ -1,0 +1,2 @@
+A simple message in English.
+Простое сообщение на русском.
