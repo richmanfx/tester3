@@ -16,6 +16,8 @@ using namespace std;
 #include <termios.h>
 
 // Прототипы функций
+void mouseBigMove(int currentSymbolNumber, int workSymbolNumber, string plusMoveSize, string minusMoveSize,
+                  string deviceId, string deviceIpAddress, int deviceUdpPort, int minDelay, int maxDelay);
 map<string, string> getSymbolCode();
 void mouseMove(string deviceId, string deviceIpAddress, int deviceUdpPort, string offset);
 void controlKeysInterception();
@@ -55,15 +57,10 @@ int main(void)
         if (i % 50 == 0) {
             cout << i << endl;
         }
-        
 
         // Пошевелить мышкой через каждые 300 нажатий кнопок
-        if (i % 300 == 0) {
-            mouseMove(deviceId, deviceIpAddress, deviceUdpPort,  "00007");      // X=+7, Y=+7 пикселей
-            usleep(10000 * getRandomDelay(minDelay, maxDelay));
-            mouseMove(deviceId, deviceIpAddress, deviceUdpPort,  "65529");      // X=-7, Y=-7 пикселей
-            cout << "Mouse" << endl;
-        }
+        mouseBigMove(i, 300, "00007", "65529", deviceId, deviceIpAddress, deviceUdpPort, minDelay, maxDelay);     // X=+7, Y=+7 пикселей и X=-7, Y=-7 пикселей
+        
         
         char symbol= txtMessage.at(i);
 //         cout << int(symbol) << endl;       // Вывод в консоль для отладки
@@ -230,14 +227,4 @@ void controlKeysInterception() {
     // Вывести клавишу
     cout << ch;
     
-}
-
-void mouseMove(string deviceId, string deviceIpAddress, int deviceUdpPort, string offset) {
-    
-    // 348540000012300123
-    // 348540006541365413
-
-    // Переместить курсор мыши на X=offset, Y=offset
-    sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "4", "000", offset, offset);
-            
 }

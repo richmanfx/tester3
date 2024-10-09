@@ -62,7 +62,7 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/symbol_code.c++$(ObjectSuffix) $(IntermediateDirectory)/main.c++$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/mouse.c++$(ObjectSuffix) $(IntermediateDirectory)/symbol_code.c++$(ObjectSuffix) $(IntermediateDirectory)/main.c++$(ObjectSuffix) 
 
 
 
@@ -93,6 +93,14 @@ PreBuild:
 ##
 ## Objects
 ##
+$(IntermediateDirectory)/mouse.c++$(ObjectSuffix): mouse.c++ $(IntermediateDirectory)/mouse.c++$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/zoer/C++/tester3/tester3/tester3/mouse.c++" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/mouse.c++$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/mouse.c++$(DependSuffix): mouse.c++
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/mouse.c++$(ObjectSuffix) -MF$(IntermediateDirectory)/mouse.c++$(DependSuffix) -MM mouse.c++
+
+$(IntermediateDirectory)/mouse.c++$(PreprocessSuffix): mouse.c++
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/mouse.c++$(PreprocessSuffix) mouse.c++
+
 $(IntermediateDirectory)/symbol_code.c++$(ObjectSuffix): symbol_code.c++ $(IntermediateDirectory)/symbol_code.c++$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/zoer/C++/tester3/tester3/tester3/symbol_code.c++" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/symbol_code.c++$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/symbol_code.c++$(DependSuffix): symbol_code.c++

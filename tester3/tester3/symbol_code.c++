@@ -1,8 +1,7 @@
 using namespace std;
 
 #include <map>
-#include <string>
-
+#include <iostream>
 
 map<string, string> getSymbolCode() {
 
