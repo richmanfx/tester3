@@ -3,17 +3,17 @@ using namespace std;
 #include <map>
 #include <cmath>
 #include <string>
+#include <stdio.h>
 #include <fstream>
 #include <sstream>
 #include <cstring>
-#include <iostream>
 #include <unistd.h>
+#include <iostream>
+#include <termios.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#include <stdio.h>
-#include <termios.h>
 
 // Прототипы функций
 void mouseBigMove(int currentSymbolNumber, int workSymbolNumber, string plusMoveSize, string minusMoveSize,
@@ -25,10 +25,19 @@ int getRandomDelay(int minDelaym, int maxDelay);
 std::string getFileMessage(const std::string& fileName);
 void sendUdpPacket(string deviceId, string deviceIpAddress, int deviceUdpPort, 
                    string b1, string b2, string b3, string b4);
+void keyPress3(string deviceId, string deviceIpAddress, int deviceUdpPort, 
+               string symbolCode, int minDelay, int maxDelay, int releaseDelay);  
+void keyPress6(string deviceId, string deviceIpAddress, int deviceUdpPort, 
+               string symbolCode, int minDelay, int maxDelay, int releaseDelay);
+void keyPress9(string deviceId, string deviceIpAddress, int deviceUdpPort, 
+               string symbolCode, int minDelay, int maxDelay, int releaseDelay); 
+void keyPress12(string deviceId, string deviceIpAddress, int deviceUdpPort, 
+               string symbolCode, int minDelay, int maxDelay, int releaseDelay);               
+
 
 int main(void)
 {
-	cout << "Start tester3" << endl;
+	cout << "Start" << endl;
     
     // TODO: Читать эти параметры из файла
     string deviceId = "3485";                       // Идентификатор устройства
@@ -59,7 +68,8 @@ int main(void)
         }
 
         // Пошевелить мышкой через каждые 300 нажатий кнопок
-        mouseBigMove(i, 300, "00007", "65529", deviceId, deviceIpAddress, deviceUdpPort, minDelay, maxDelay);     // X=+7, Y=+7 пикселей и X=-7, Y=-7 пикселей
+        // X=+7, Y=+7 пикселей и X=-7, Y=-7 пикселей
+        mouseBigMove(i, 300, "00007", "65529", deviceId, deviceIpAddress, deviceUdpPort, minDelay, maxDelay);     
         
         
         char symbol= txtMessage.at(i);
@@ -67,90 +77,15 @@ int main(void)
         string symbolCode = symbolCodesMap[std::to_string(int(symbol))];
     
         if (symbolCode.length() == 3) {
-            
-            usleep(1000 * getRandomDelay(minDelay, maxDelay));
-            
-            // Нажать и отпустить 
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "1", symbolCode, "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "2", symbolCode, "00000", "00000");
-            usleep(releaseDelay * 1000); 
-            
+            keyPress3(deviceId, deviceIpAddress, deviceUdpPort, symbolCode, minDelay, maxDelay, releaseDelay);
         } else if (symbolCode.length() == 6) {
-            
-            usleep(1000 * getRandomDelay(minDelay, maxDelay));
-            
-            // C Шифтом или Ctrl нажимать
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "1", symbolCode.substr(0, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "1", symbolCode.substr(3, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "2", symbolCode.substr(3, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "2", symbolCode.substr(0, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-
+            keyPress6(deviceId, deviceIpAddress, deviceUdpPort, symbolCode, minDelay, maxDelay, releaseDelay);
         } else if (symbolCode.length() == 6 && symbolCode == "228225") {   // Переключить раскладку на RUS
-        
-            usleep(1000 * getRandomDelay(minDelay, maxDelay));
-        
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "1", symbolCode.substr(0, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "1", symbolCode.substr(3, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "2", symbolCode.substr(0, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "2", symbolCode.substr(3, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            
+            keyPress6(deviceId, deviceIpAddress, deviceUdpPort, symbolCode, minDelay, maxDelay, releaseDelay);
         } else if (symbolCode.length() == 9) {
-            
-            usleep(1000 * getRandomDelay(minDelay, maxDelay));
-            
-            // Нажать клавишу русскую
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "1", symbolCode.substr(0, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "2", symbolCode.substr(0, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            
-            // Переключиться обратно в LAT
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "1", symbolCode.substr(3, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "1", symbolCode.substr(6, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "2", symbolCode.substr(3, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "2", symbolCode.substr(6, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            
+            keyPress9(deviceId, deviceIpAddress, deviceUdpPort, symbolCode, minDelay, maxDelay, releaseDelay);
         } else if (symbolCode.length() == 12) {
-            
-            usleep(1000 * getRandomDelay(minDelay, maxDelay));
-            
-            // Нажать Шифт
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "1", symbolCode.substr(0, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            
-            
-            // Нажать клавишу русскую
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "1", symbolCode.substr(3, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "2", symbolCode.substr(3, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            
-            // Отпустить Шифт
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "2", symbolCode.substr(0, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            
-            // Переключиться обратно в LAT
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "1", symbolCode.substr(6, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "1", symbolCode.substr(9, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "2", symbolCode.substr(6, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
-            sendUdpPacket(deviceId, deviceIpAddress, deviceUdpPort, "2", symbolCode.substr(9, 3), "00000", "00000");
-            usleep(releaseDelay * 1000);
+            keyPress12(deviceId, deviceIpAddress, deviceUdpPort, symbolCode, minDelay, maxDelay, releaseDelay);
         }
     }
     exit(0);

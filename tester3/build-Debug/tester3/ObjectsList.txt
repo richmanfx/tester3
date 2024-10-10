@@ -1,1 +1,1 @@
-../build-Debug/tester3/mouse.c++.o ../build-Debug/tester3/symbol_code.c++.o ../build-Debug/tester3/main.c++.o
+../build-Debug/tester3/keystrokes.c++.o ../build-Debug/tester3/mouse.c++.o ../build-Debug/tester3/symbol_code.c++.o ../build-Debug/tester3/main.c++.o

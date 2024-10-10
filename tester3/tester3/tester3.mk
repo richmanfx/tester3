@@ -14,7 +14,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Zoer
-Date                   :=09/10/24
+Date                   :=10/10/24
 CodeLitePath           :=/home/zoer/.codelite
 MakeDirCommand         :=mkdir -p
 LinkerName             :=/usr/bin/g++-13
@@ -62,7 +62,7 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/mouse.c++$(ObjectSuffix) $(IntermediateDirectory)/symbol_code.c++$(ObjectSuffix) $(IntermediateDirectory)/main.c++$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/keystrokes.c++$(ObjectSuffix) $(IntermediateDirectory)/mouse.c++$(ObjectSuffix) $(IntermediateDirectory)/symbol_code.c++$(ObjectSuffix) $(IntermediateDirectory)/main.c++$(ObjectSuffix) 
 
 
 
@@ -93,6 +93,14 @@ PreBuild:
 ##
 ## Objects
 ##
+$(IntermediateDirectory)/keystrokes.c++$(ObjectSuffix): keystrokes.c++ $(IntermediateDirectory)/keystrokes.c++$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/zoer/C++/tester3/tester3/tester3/keystrokes.c++" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/keystrokes.c++$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/keystrokes.c++$(DependSuffix): keystrokes.c++
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/keystrokes.c++$(ObjectSuffix) -MF$(IntermediateDirectory)/keystrokes.c++$(DependSuffix) -MM keystrokes.c++
+
+$(IntermediateDirectory)/keystrokes.c++$(PreprocessSuffix): keystrokes.c++
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/keystrokes.c++$(PreprocessSuffix) keystrokes.c++
+
 $(IntermediateDirectory)/mouse.c++$(ObjectSuffix): mouse.c++ $(IntermediateDirectory)/mouse.c++$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/zoer/C++/tester3/tester3/tester3/mouse.c++" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/mouse.c++$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/mouse.c++$(DependSuffix): mouse.c++
