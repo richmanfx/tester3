@@ -12,9 +12,7 @@ using namespace std;
 #include <termios.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
-//#include <libconfig.h>
 #include <sys/socket.h>
-
 #include "INIreader.hpp"
 
 
