@@ -17,11 +17,8 @@ using namespace std;
 
 // Прототипы функций
 void usage(void);
-void mouseBigMove(int currentSymbolNumber, int workSymbolNumber, string plusMoveSize, string minusMoveSize,
-                  string deviceId, string deviceIpAddress, int deviceUdpPort, int minDelay, int maxDelay);
-map<string, string> getSymbolCode();
-void mouseMove(string deviceId, string deviceIpAddress, int deviceUdpPort, string offset);
 void controlKeysInterception();
+map<string, string> getSymbolCode();
 int getRandomDelay(int minDelaym, int maxDelay);
 std::string getFileMessage(const std::string& fileName);
 void sendUdpPacket(string deviceId, string deviceIpAddress, int deviceUdpPort, 
@@ -33,7 +30,10 @@ void keyPress6(string deviceId, string deviceIpAddress, int deviceUdpPort,
 void keyPress9(string deviceId, string deviceIpAddress, int deviceUdpPort, 
                string symbolCode, int minDelay, int maxDelay, int releaseDelay); 
 void keyPress12(string deviceId, string deviceIpAddress, int deviceUdpPort, 
-               string symbolCode, int minDelay, int maxDelay, int releaseDelay);               
+               string symbolCode, int minDelay, int maxDelay, int releaseDelay);  
+void mouseMove(string deviceId, string deviceIpAddress, int deviceUdpPort, string offset);               
+void mouseBigMove(int currentSymbolNumber, int workSymbolNumber, string plusMoveSize, string minusMoveSize,
+                  string deviceId, string deviceIpAddress, int deviceUdpPort, int minDelay, int maxDelay);
 
 
 int main(int argc, char *argv[])
@@ -41,25 +41,27 @@ int main(int argc, char *argv[])
     // Если запустили без аргументов
     if(argc != 2) usage();                 
     
+    // Сообщение о старте программы
 	cout << "Start" << endl;
     
     // TODO: Читать эти параметры из файла
     string deviceId = "3485";                       // Идентификатор устройства
     string deviceIpAddress = "192.168.0.222";       // IP-адрес устройства
     int deviceUdpPort = 12345;                      // UDP-порт устройства
-    string messageFileName = "message.txt";
     int minDelay = 100;     // Минимальная задержка нажатия клавиш, миллисекунды
     int maxDelay = 700;     // Максимальная задержка нажатия клавиш, миллисекунды
     int releaseDelay = 10;  // Миллисекунды на отпускание клавиш
     
-    srand((unsigned)time(NULL));        // Инициализация случайного генератора временем
+    // Инициализация случайного генератора временем
+    srand((unsigned)time(NULL));        
         
-    // Читать файл с текстовым сообщением
-    string txtMessage = getFileMessage(messageFileName);
-//    string txtMessage = "Инициализация ";       // Строка для отладки
+    // Читать файл из аргумента командной строки с текстовым сообщением
+    string txtMessage = getFileMessage(argv[1]);
     
+    // Получить коды символов (клавиш)
     map<string, string> symbolCodesMap = getSymbolCode();
     
+    // Бежать про символам сообщения
     for (long unsigned int i = 0; i < txtMessage.length(); i++) {
         
         // Перехват клавиш управления
@@ -75,11 +77,12 @@ int main(int argc, char *argv[])
         // X=+7, Y=+7 пикселей и X=-7, Y=-7 пикселей
         mouseBigMove(i, 300, "00007", "65529", deviceId, deviceIpAddress, deviceUdpPort, minDelay, maxDelay);     
         
-        
+        // Получить код символа
         char symbol= txtMessage.at(i);
 //         cout << int(symbol) << endl;       // Вывод в консоль для отладки
         string symbolCode = symbolCodesMap[std::to_string(int(symbol))];
     
+        // Нашимать клавиши в зависимости от длины кода символа
         if (symbolCode.length() == 3) {
             keyPress3(deviceId, deviceIpAddress, deviceUdpPort, symbolCode, minDelay, maxDelay, releaseDelay);
         } else if (symbolCode.length() == 6) {
@@ -175,4 +178,3 @@ void usage(void){
     cout << "\n Использование:\n\t tester3 <имя_файла_сообщения>\n\n";
     exit(0);
 }
-
