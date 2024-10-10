@@ -16,6 +16,7 @@ using namespace std;
 
 
 // Прототипы функций
+void usage(void);
 void mouseBigMove(int currentSymbolNumber, int workSymbolNumber, string plusMoveSize, string minusMoveSize,
                   string deviceId, string deviceIpAddress, int deviceUdpPort, int minDelay, int maxDelay);
 map<string, string> getSymbolCode();
@@ -35,8 +36,11 @@ void keyPress12(string deviceId, string deviceIpAddress, int deviceUdpPort,
                string symbolCode, int minDelay, int maxDelay, int releaseDelay);               
 
 
-int main(void)
+int main(int argc, char *argv[])
 {
+    // Если запустили без аргументов
+    if(argc != 2) usage();                 
+    
 	cout << "Start" << endl;
     
     // TODO: Читать эти параметры из файла
@@ -88,6 +92,7 @@ int main(void)
             keyPress12(deviceId, deviceIpAddress, deviceUdpPort, symbolCode, minDelay, maxDelay, releaseDelay);
         }
     }
+    cout << "Stop" << endl;
     exit(0);
 }
 
@@ -163,3 +168,11 @@ void controlKeysInterception() {
     cout << ch;
     
 }
+
+
+// Сообщение usage-help
+void usage(void){ 
+    cout << "\n Использование:\n\t tester3 <имя_файла_сообщения>\n\n";
+    exit(0);
+}
+
