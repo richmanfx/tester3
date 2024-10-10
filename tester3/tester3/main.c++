@@ -12,7 +12,10 @@ using namespace std;
 #include <termios.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
+//#include <libconfig.h>
 #include <sys/socket.h>
+
+#include "INIreader.hpp"
 
 
 // Прототипы функций
@@ -38,19 +41,25 @@ void mouseBigMove(int currentSymbolNumber, int workSymbolNumber, string plusMove
 
 int main(int argc, char *argv[])
 {
-    // Если запустили без аргументов
+    // Если запустить не с числом аргументов равным одному
     if(argc != 2) usage();                 
     
     // Сообщение о старте программы
 	cout << "Start" << endl;
     
-    // TODO: Читать эти параметры из файла
-    string deviceId = "3485";                       // Идентификатор устройства
-    string deviceIpAddress = "192.168.0.222";       // IP-адрес устройства
-    int deviceUdpPort = 12345;                      // UDP-порт устройства
-    int minDelay = 100;     // Минимальная задержка нажатия клавиш, миллисекунды
-    int maxDelay = 700;     // Максимальная задержка нажатия клавиш, миллисекунды
-    int releaseDelay = 10;  // Миллисекунды на отпускание клавиш
+    // Читать параметры из конфигурационного файла
+    string iniFileName = "tester3.ini";
+    INIReader reader(iniFileName);
+    if (reader.ParseError() < 0) {
+        cout << "Can't load '" << iniFileName << "'" << endl;
+        return 1;
+    }
+    string deviceId = reader.Get("device", "id", "3485");       // Идентификатор устройства
+    string deviceIpAddress = reader.Get("device", "ipAddress", "192.168.0.222");       // IP-адрес устройства
+    int deviceUdpPort = reader.GetInteger("device", "udpPort", 12345);                      // UDP-порт устройства
+    int minDelay = reader.GetInteger("delays", "minDelay", 100);     // Минимальная задержка нажатия клавиш, миллисекунды
+    int maxDelay = reader.GetInteger("delays", "maxDelay", 700);     // Максимальная задержка нажатия клавиш, миллисекунды
+    int releaseDelay = reader.GetInteger("delays", "releaseDelay", 10);  // Миллисекунды на отпускание клавиш
     
     // Инициализация случайного генератора временем
     srand((unsigned)time(NULL));        

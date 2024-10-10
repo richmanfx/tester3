@@ -93,6 +93,8 @@
     </Configuration>
   </Settings>
   <VirtualDirectory Name="src">
+    <File Name="INIreader.hpp"/>
+    <File Name="tester3.ini"/>
     <File Name="keystrokes.c++"/>
     <File Name="mouse.c++"/>
     <File Name="symbol_code.c++"/>
